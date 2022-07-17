@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  publicapi:
+    image: ${DOCKER_REGISTRY-}publicapi:dev
+    container_name: public-api
+    build:
+      context: .
+      dockerfile: PublicApi/Dockerfile
+    volumes:
+      - eShop:/api
+    ports:
+      - "5001:80"
+    depends_on:
+      - sqldb
+
+  sqldb:
+     image: mcr.microsoft.com/mssql/server:2022-latest
+     container_name: sql-db
+     volumes:
+       - eShop:/db
+     environment:
+       - SA_PASSWORD=Ux1xamnujh
+       - ACCEPT_EULA=Y
+     ports:
+       - "5433:1433"
+     expose:
+       - 5433
+  
+volumes:
+  eShop:
